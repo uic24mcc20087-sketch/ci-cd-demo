@@ -1,0 +1,23 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t ci-cd-demo .
+
+      - name: Run Docker container
+        run: |
+          docker stop ci-cd || true
+          docker rm ci-cd || true
+          docker run -d -p 3000:3000 --name ci-cd ci-cd-demo
